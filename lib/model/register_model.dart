@@ -10,8 +10,8 @@ class RegisterModel {
   
   RegisterModel.fromJson(Map<String, dynamic> json){
     data = RegisterData.fromJson(json['data']);
-    message = json['message'];
-    status = json['status'];
+    message = json['message']??'';
+    status = json['status']??'';
   }
 
   Map<String, dynamic> toJson() {

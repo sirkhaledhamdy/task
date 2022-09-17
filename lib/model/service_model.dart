@@ -1,15 +1,15 @@
-class AutoGenerate {
-  AutoGenerate({
+class ServiceModel {
+  ServiceModel({
     required this.data,
     required this.message,
     required this.status,
   });
-  late final List<Data> data;
+  late final List<ServiceData> data;
   late final String message;
   late final bool status;
   
-  AutoGenerate.fromJson(Map<String, dynamic> json){
-    data = List.from(json['data']).map((e)=>Data.fromJson(e)).toList();
+  ServiceModel.fromJson(Map<String, dynamic> json){
+    data = List.from(json['data']).map((e)=>ServiceData.fromJson(e)).toList();
     message = json['message'];
     status = json['status'];
   }
@@ -23,8 +23,8 @@ class AutoGenerate {
   }
 }
 
-class Data {
-  Data({
+class ServiceData {
+  ServiceData({
     required this.id,
     required this.title,
     required this.description,
@@ -39,13 +39,13 @@ class Data {
   late final String category;
   late final int price;
   
-  Data.fromJson(Map<String, dynamic> json){
-    id = json['id'];
-    title = json['title'];
-    description = json['description'];
-    image = json['image'];
-    category = json['category'];
-    price = json['price'];
+  ServiceData.fromJson(Map<String, dynamic> json){
+    id = json['id']??'';
+    title = json['title']??'';
+    description = json['description']??'';
+    image = json['image']??'';
+    category = json['category']??'';
+    price = json['price']??'';
   }
 
   Map<String, dynamic> toJson() {

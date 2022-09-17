@@ -9,12 +9,12 @@ import 'package:task/view/screens/home_screen.dart';
 import 'package:task/view/screens/register_screen.dart';
 import 'package:task/view/styles/colors.dart';
 import 'package:task/view/widgets/reuseable.dart';
-
+import 'package:task/view/styles/adaptive/adaptive.dart';
 import '../../constants/shared/local/cache_helper.dart';
 
 class LoginScreen extends StatelessWidget {
    LoginScreen({super.key});
-     var formKey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -31,20 +31,27 @@ class LoginScreen extends StatelessWidget {
         listener: (context , state){
            if(state is LoginSuccessState){
             if(state.loginModel.message == 'تم تسجيل الدخول بنجاح'){
+              CacheHelper.saveData(key: 'isVerified', value: true);
               CacheHelper.saveData(key: 'accessToken', value: state.loginModel.data.user.id).then((value) {
                 accessToken = CacheHelper.getData(key: "accessToken");
+                isVerified = CacheHelper.getData(key: 'isVerified');
                 print(accessToken);
+                showToast(text: state.loginModel.message, state: ToastStates.success);
 
-                navigateAndFinish(context, HomeScreen());
-                // Make it show only if he didn't claim his seed after every login.
+                navigateAndFinish(context, const HomeScreen());
 
               });
 
 
             } else {}
         }else if (state is LoginErrorState) {
+          showToast(text: state.error, state: ToastStates.error);
+
           if (state.error == 'الحساب غير مفعل') {
               navigateAndFinish(context, VerificaionScreen());
+              isVerified =false;
+              showToast(text: state.error, state: ToastStates.error);
+
 
             }
             
@@ -89,7 +96,7 @@ class LoginScreen extends StatelessWidget {
                 SafeArea(
                   bottom: false,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    padding:  EdgeInsets.symmetric(horizontal: 16.rSp, vertical: 20.rSp),
                     child: SizedBox(
                       height: 66.h,
                       child: SingleChildScrollView(
@@ -126,9 +133,9 @@ class LoginScreen extends StatelessWidget {
                                     fontSize: 18.rSp,
                                   ),
                                 ),
-                                SizedBox(width: 10.rh,),
+                                SizedBox(width: 10.rw,),
                                 Container(
-                                  width: 10.rSp,
+                                  width: 20.rSp,
                                   height: 1.rSp,
                                   color: kButtonColor,
                                 ),
@@ -143,13 +150,20 @@ class LoginScreen extends StatelessWidget {
                                 child: defaultFormField(
                                   controller: emailController,
                                   type: TextInputType.text  ,
-                                  validate: (){},
+                                  validate: (String value){
+                                        if(value.isEmpty) {
+                                          return 'User Must Input Data';
+                                          }
+                                          return null;
+                                  },
                                   suffix: Icon(Icons.mail_outline,
-                                  size: 20,
+                                  size: 20.rSp,
                                   color: Colors.grey.withOpacity(.4),
                                   ),
                                   hint: 'البريد الالكتروني',
                                   hintStyle: TextStyle(
+                                   fontFamily: 'Kharbet',
+
                                     color: Colors.grey.withOpacity(.5),
                                   ),
                                   isPass: false,
@@ -165,21 +179,37 @@ class LoginScreen extends StatelessWidget {
                                 child: defaultFormField(
                                   controller: passwordController,
                                   type: TextInputType.text,
-                                  validate: (){},
-                                  suffix: Image(image: AssetImage('assets/Icons/lock.png',),),
+                                  validate: (String value){
+                                        if(value.isEmpty) {
+                                          return 'User Must Input Data';
+                                          }
+                                          return null;
+                                  },
+                                  suffix: const Image(image: AssetImage('assets/Icons/lock.png',),),
                                   hint: 'كلمة المرور',
                                   hintStyle: TextStyle(
                                     color: Colors.grey.withOpacity(.5),
+                                  fontFamily: 'Kharbet',
+
                                   ),
                                   isPass: true,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10,),
-                            
+                            const SizedBox(height: 10,),
+                            Padding(
+                              padding:  EdgeInsets.all(8.0.rSp),
+                              child: Row(children: const [
+                                Text('نسيت كلمة المرور؟',
+                                style: TextStyle(
+                                  color: kText2Color,
+                                ),
+                                ),
+                              ],),
+                            ),
                             SizedBox(height: 20.rh,),
                             Center(
-                              child: defaultButton(onPressed: (){
+                              child: (state is LoginLoadingState) ? Center(child: AdaptiveIndicator( os: getOS(),)) : defaultButton(onPressed: (){
                                 cubit.userLogin(email: emailController.text, password: passwordController.text);
                               }, text: 'دخول',
                               width: 150.rSp,
@@ -192,15 +222,17 @@ class LoginScreen extends StatelessWidget {
                               children: [
                                 TextButton(onPressed: (){
                                   navigateTo(context, RegisterScreen());
-                                }, child: Text('حساب جديد',
+                                }, child: const Text('تسجيل جديد',
                                 style: TextStyle(
+                                  fontFamily: 'Kharbet',
                                   color: kText1Color,
                                   decoration: TextDecoration.underline
                                 ),
                                 ),
                                 ),
-                                Text('- ليس لدي حساب',
+                                const Text('- ليس لدي حساب',
                                 style: TextStyle(
+                                  fontFamily: 'Kharbet',
                                   color: kText2Color,
                                 ),
                                 ),

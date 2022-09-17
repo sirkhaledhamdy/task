@@ -4,13 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:task/constants/bloc_observer.dart';
 import 'package:task/constants/constants.dart';
 import 'package:task/view/screens/choose_verification.dart';
-import 'package:task/view/screens/code_screen.dart';
 import 'package:task/view/screens/home_screen.dart';
 import 'package:task/view/screens/login_screen.dart';
-import 'package:task/view/screens/register_screen.dart';
-import 'package:task/view/screens/verify_email.dart';
-import 'package:task/view/screens/verify_phone.dart';
-
 import 'constants/shared/local/cache_helper.dart';
 import 'constants/shared/remote/dio_helper.dart';
 
@@ -26,13 +21,20 @@ void main() {
         key: 'accessToken',
       )?? null;
 
+        isVerified = CacheHelper.getData(
+        key: 'isVerified',
+      )?? false;
+
       print(accessToken);
 
       // First Page check.
-      if (accessToken != null) {
-        widget = HomeScreen();
-      } else {
+      if (accessToken != null && isVerified == true) {
+        widget = const HomeScreen();
+      } else if(accessToken != null && isVerified == false) {
+        widget = VerificaionScreen();
+      }else{
         widget = LoginScreen();
+
       }
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
           .then((_) {

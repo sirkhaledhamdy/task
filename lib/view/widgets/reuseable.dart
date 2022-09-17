@@ -54,7 +54,7 @@ Widget defaultFormField ({
   keyboardType: type,
   textAlign: TextAlign.right,
   decoration: InputDecoration(
-    contentPadding: EdgeInsets.symmetric(horizontal: 20),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
     errorText: errorText,
     suffixIcon: suffix,
     hintText: hint,

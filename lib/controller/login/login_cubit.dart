@@ -1,10 +1,10 @@
-import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/constants/shared/remote/dio_helper.dart';
 import 'package:task/constants/shared/remote/end_points.dart';
 import 'package:task/model/login_model.dart';
 
+import '../../constants/constants.dart';
 import 'login_states.dart';
 
 class LoginCubit extends Cubit<LoginStates>{
@@ -25,8 +25,8 @@ class LoginCubit extends Cubit<LoginStates>{
      DioHelper.postData(url: LOGIN, data: {
       'email':email,
       'password':password,
-      'token_firebase':'token',
-      'device_id':'id',
+      'token_firebase':getRandomString(10),
+      'device_id':getRandomString(10),
     },).then((value)  {
       loginModel = LoginModel.fromJson(value!.data);
       emit(LoginSuccessState(loginModel!));
